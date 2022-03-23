@@ -16,8 +16,21 @@ public class TopicsController {
     private TopicRepository topicRepository;
 
     @RequestMapping("/topics")
-    public List<TopicDTO> list() {
+    public List<TopicDTO> getTopics() {
         List<Topic> topics = topicRepository.findAll();
+
+        return TopicDTO.mapper(topics);
+    }
+
+    @RequestMapping("/topicsByNameCourse")
+    public List<TopicDTO> getTopicsByNameCourse(String nameCourse) {
+        List<Topic> topics;
+
+        if(nameCourse.trim().isEmpty()) {
+            topics = topicRepository.findAll();
+        } else{
+            topics = topicRepository.findByCourseName(nameCourse);
+        }
 
         return TopicDTO.mapper(topics);
     }
