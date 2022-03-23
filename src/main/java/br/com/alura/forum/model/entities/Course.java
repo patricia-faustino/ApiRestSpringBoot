@@ -16,13 +16,6 @@ public class Course {
 
     private String category;
 
-    public Course( String name, String category) {
-        this.name = name;
-        this.category = category;
-    }
-
-    public Course(){}
-
     @Override
     public int hashCode() {
         final int prime = 31;
