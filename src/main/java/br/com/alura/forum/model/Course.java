@@ -6,8 +6,7 @@ public class Course {
     private String name;
     private String category;
 
-    public Course(Long id, String name, String category) {
-        this.id = id;
+    public Course( String name, String category) {
         this.name = name;
         this.category = category;
     }
