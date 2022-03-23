@@ -1,26 +1,42 @@
-package br.com.alura.forum.model;
+package br.com.alura.forum.model.entities;
+
+import br.com.alura.forum.model.enums.TopicStatus;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
-public class Answer {
+public class Topic {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private String title;
+
     private String message;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Topic topic;
-
     private LocalDateTime dateCreation = LocalDateTime.now();
+
+    @Enumerated(EnumType.STRING)
+    private TopicStatus status = TopicStatus.NAO_RESPONDIDO;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
 
-    private Boolean solution = false;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Course course;
+
+    @OneToMany(mappedBy = "topic")
+    private List<Answer> answers = new ArrayList<>();
+
+    public Topic(String title, String message, Course course) {
+        this.title = title;
+        this.message = message;
+        this.course = course;
+    }
 
     @Override
     public int hashCode() {
@@ -38,7 +54,7 @@ public class Answer {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        Answer other = (Answer) obj;
+        Topic other = (Topic) obj;
         if (id == null) {
             if (other.id != null)
                 return false;
@@ -55,20 +71,20 @@ public class Answer {
         this.id = id;
     }
 
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
     public String getMessage() {
         return message;
     }
 
     public void setMessage(String message) {
         this.message = message;
-    }
-
-    public Topic getTopic() {
-        return topic;
-    }
-
-    public void setTopic(Topic topic) {
-        this.topic = topic;
     }
 
     public LocalDateTime getDateCreation() {
@@ -79,6 +95,14 @@ public class Answer {
         this.dateCreation = dateCreation;
     }
 
+    public TopicStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(TopicStatus status) {
+        this.status = status;
+    }
+
     public User getUser() {
         return user;
     }
@@ -87,11 +111,19 @@ public class Answer {
         this.user = user;
     }
 
-    public Boolean getSolution() {
-        return solution;
+    public Course getCourse() {
+        return course;
     }
 
-    public void setSolution(Boolean solution) {
-        this.solution = solution;
+    public void setCourse(Course course) {
+        this.course = course;
+    }
+
+    public List<Answer> getAnswers() {
+        return answers;
+    }
+
+    public void setAnswers(List<Answer> answers) {
+        this.answers = answers;
     }
 }

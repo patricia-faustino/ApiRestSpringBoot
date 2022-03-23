@@ -1,7 +1,7 @@
 package br.com.alura.forum.controller;
 
-import br.com.alura.forum.model.Course;
-import br.com.alura.forum.model.Topic;
+import br.com.alura.forum.model.entities.Course;
+import br.com.alura.forum.model.entities.Topic;
 import br.com.alura.forum.model.dto.TopicDTO;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
