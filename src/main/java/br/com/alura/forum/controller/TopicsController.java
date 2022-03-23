@@ -7,6 +7,7 @@ import br.com.alura.forum.repository.CourseRepository;
 import br.com.alura.forum.repository.TopicRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -45,7 +46,7 @@ public class TopicsController {
     }
 
     @PostMapping
-    public ResponseEntity<TopicDTO> post(@RequestBody TopicForm topicForm, UriComponentsBuilder uriComponentsBuilder) {
+    public ResponseEntity<TopicDTO> post(@RequestBody @Validated TopicForm topicForm, UriComponentsBuilder uriComponentsBuilder) {
         Topic topic = topicForm.map(courseRepository);
         topicRepository.save(topic);
 

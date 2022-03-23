@@ -4,10 +4,21 @@ import br.com.alura.forum.model.entities.Course;
 import br.com.alura.forum.model.entities.Topic;
 import br.com.alura.forum.repository.CourseRepository;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+
 public class TopicForm {
 
+    @NotNull
+    @NotEmpty
     private String title;
+
+    @NotNull
+    @NotEmpty
     private String message;
+
+    @NotNull
+    @NotEmpty
     private String courseName;
 
     public String getTitle() {
