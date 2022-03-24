@@ -49,6 +49,7 @@ public class TopicsController {
     }
 
     @PostMapping
+    @Transactional
     public ResponseEntity<TopicDTO> post(@RequestBody @Validated TopicForm topicForm, UriComponentsBuilder uriComponentsBuilder) {
         Topic topic = topicForm.map(courseRepository);
         topicRepository.save(topic);
@@ -70,5 +71,13 @@ public class TopicsController {
         Topic topic = topicForm.put(id, topicRepository);
 
         return ResponseEntity.ok(new TopicDTO(topic));
+    }
+
+    @DeleteMapping("/{id}")
+    @Transactional
+    public ResponseEntity<?> remove(@PathVariable Long id) {
+        topicRepository.deleteById(id);
+
+        return ResponseEntity.ok().build();
     }
 }
