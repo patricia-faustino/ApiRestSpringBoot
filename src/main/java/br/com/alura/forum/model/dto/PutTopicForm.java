@@ -1,14 +1,13 @@
 package br.com.alura.forum.model.dto;
 
-import br.com.alura.forum.model.entities.Course;
 import br.com.alura.forum.model.entities.Topic;
-import br.com.alura.forum.repository.CourseRepository;
+import br.com.alura.forum.repository.TopicRepository;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
-public class TopicForm {
+public class PutTopicForm {
 
     @NotNull
     @NotEmpty
@@ -19,10 +18,6 @@ public class TopicForm {
     @NotEmpty
     @Length(min = 10)
     private String message;
-
-    @NotNull
-    @NotEmpty
-    private String courseName;
 
     public String getTitle() {
         return title;
@@ -40,16 +35,11 @@ public class TopicForm {
         this.message = message;
     }
 
-    public String getCourseName() {
-        return courseName;
-    }
+    public Topic put(Long id, TopicRepository topicRepository) {
+        Topic topic = topicRepository.getById(id);
+        topic.setTitle(this.title);
+        topic.setMessage(this.message);
 
-    public void setCourseName(String courseName) {
-        this.courseName = courseName;
-    }
-
-    public Topic map(CourseRepository repository) {
-        Course course = repository.findByName(courseName);
-        return new Topic(title, message, course);
+        return topic;
     }
 }

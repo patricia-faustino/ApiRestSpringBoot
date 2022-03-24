@@ -1,6 +1,7 @@
 package br.com.alura.forum.controller;
 
 import br.com.alura.forum.model.dto.DetailsTopicDTO;
+import br.com.alura.forum.model.dto.PutTopicForm;
 import br.com.alura.forum.model.dto.TopicDTO;
 import br.com.alura.forum.model.dto.TopicForm;
 import br.com.alura.forum.model.entities.Topic;
@@ -12,6 +13,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import javax.transaction.Transactional;
 import java.net.URI;
 import java.util.List;
 
@@ -60,5 +62,13 @@ public class TopicsController {
         Topic topic = topicRepository.getById(id);
 
         return new DetailsTopicDTO(topic);
+    }
+
+    @PutMapping("/{id}")
+    @Transactional
+    public ResponseEntity<TopicDTO> put(@PathVariable Long id, @RequestBody @Validated PutTopicForm topicForm) {
+        Topic topic = topicForm.put(id, topicRepository);
+
+        return ResponseEntity.ok(new TopicDTO(topic));
     }
 }
