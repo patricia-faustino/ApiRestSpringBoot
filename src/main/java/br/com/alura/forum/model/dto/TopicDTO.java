@@ -1,11 +1,13 @@
 package br.com.alura.forum.model.dto;
 
 import br.com.alura.forum.model.entities.Topic;
+import lombok.Data;
+import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.stream.Collectors;
 
+@Data
+@SuperBuilder
 public class TopicDTO {
 
     private Long id;
@@ -18,27 +20,5 @@ public class TopicDTO {
         this.title = topic.getTitle();
         this.message = topic.getMessage();
         this.dateCreation = topic.getDateCreation();
-    }
-
-    public static List<TopicDTO> mapper(List<Topic> topics) {
-        return topics.stream()
-                .map(TopicDTO::new)
-                .collect(Collectors.toList());
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public LocalDateTime getDateCreation() {
-        return dateCreation;
     }
 }

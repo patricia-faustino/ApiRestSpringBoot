@@ -4,16 +4,13 @@ import br.com.alura.forum.model.dto.DetailsTopicDTO;
 import br.com.alura.forum.model.dto.PutTopicForm;
 import br.com.alura.forum.model.dto.TopicDTO;
 import br.com.alura.forum.model.dto.TopicForm;
-import br.com.alura.forum.model.entities.Topic;
-import br.com.alura.forum.repository.CourseRepository;
-import br.com.alura.forum.repository.TopicRepository;
+import br.com.alura.forum.service.TopicService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import javax.transaction.Transactional;
 import java.net.URI;
 import java.util.List;
 
@@ -22,62 +19,40 @@ import java.util.List;
 public class TopicsController {
 
     @Autowired
-    private TopicRepository topicRepository;
-
-    @Autowired
-    private CourseRepository courseRepository;
+    private TopicService topicService;
 
     @GetMapping
     public List<TopicDTO> getTopics() {
-        List<Topic> topics = topicRepository.findAll();
-
-        return TopicDTO.mapper(topics);
+        return topicService.getTopics();
     }
 
     @GetMapping
     @RequestMapping("/topicsByCourseName")
     public List<TopicDTO> getTopicsByCourseName(String courseName) {
-        List<Topic> topics;
-
-        if(courseName.trim().isEmpty()) {
-            topics = topicRepository.findAll();
-        } else{
-            topics = topicRepository.findByCourseName(courseName);
-        }
-
-        return TopicDTO.mapper(topics);
+        return topicService.getTopicsByCourseName(courseName);
     }
 
     @PostMapping
-    @Transactional
     public ResponseEntity<TopicDTO> post(@RequestBody @Validated TopicForm topicForm, UriComponentsBuilder uriComponentsBuilder) {
-        Topic topic = topicForm.map(courseRepository);
-        topicRepository.save(topic);
-
-        URI uri = uriComponentsBuilder.path("/topics/{id}").buildAndExpand(topic.getId()).toUri();
-        return ResponseEntity.created(uri).body(new TopicDTO(topic));
+        TopicDTO topicDTO = topicService.saveTopic(topicForm);
+        URI uri = uriComponentsBuilder.path("/topics/{id}").buildAndExpand(topicDTO.getId()).toUri();
+        return ResponseEntity.created(uri).body(topicDTO);
     }
 
     @GetMapping("/{id}")
     public DetailsTopicDTO getTopicById(@PathVariable Long id) {
-        Topic topic = topicRepository.getById(id);
-
-        return new DetailsTopicDTO(topic);
+        return topicService.getTopicById(id);
     }
 
     @PutMapping("/{id}")
-    @Transactional
     public ResponseEntity<TopicDTO> put(@PathVariable Long id, @RequestBody @Validated PutTopicForm topicForm) {
-        Topic topic = topicForm.put(id, topicRepository);
-
-        return ResponseEntity.ok(new TopicDTO(topic));
+        TopicDTO topicDTO = topicService.putTopic(id, topicForm);
+        return ResponseEntity.ok(topicDTO);
     }
 
     @DeleteMapping("/{id}")
-    @Transactional
     public ResponseEntity<?> remove(@PathVariable Long id) {
-        topicRepository.deleteById(id);
-
+        topicService.remove(id);
         return ResponseEntity.ok().build();
     }
 }

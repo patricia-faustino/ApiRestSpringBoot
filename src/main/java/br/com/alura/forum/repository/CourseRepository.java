@@ -3,7 +3,8 @@ package br.com.alura.forum.repository;
 import br.com.alura.forum.model.entities.Course;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface CourseRepository extends JpaRepository<Course, Long> {
+import java.util.Optional;
 
-    Course findByName(String name);
+public interface CourseRepository extends JpaRepository<Course, Long> {
+    Optional<Course> findByName(String name);
 }

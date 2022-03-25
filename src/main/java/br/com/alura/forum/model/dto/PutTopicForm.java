@@ -1,12 +1,18 @@
 package br.com.alura.forum.model.dto;
 
-import br.com.alura.forum.model.entities.Topic;
-import br.com.alura.forum.repository.TopicRepository;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@SuperBuilder
 public class PutTopicForm {
 
     @NotNull
@@ -18,28 +24,4 @@ public class PutTopicForm {
     @NotEmpty
     @Length(min = 10)
     private String message;
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public Topic put(Long id, TopicRepository topicRepository) {
-        Topic topic = topicRepository.getById(id);
-        topic.setTitle(this.title);
-        topic.setMessage(this.message);
-
-        return topic;
-    }
 }
