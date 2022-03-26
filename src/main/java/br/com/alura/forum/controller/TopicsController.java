@@ -26,9 +26,8 @@ public class TopicsController {
         return topicService.getTopics();
     }
 
-    @GetMapping
-    @RequestMapping("/topicsByCourseName")
-    public List<TopicDTO> getTopicsByCourseName(String courseName) {
+    @GetMapping("/getTopicsByCourseName")
+    public List<TopicDTO> getTopicsByCourseName(@RequestParam String courseName) {
         return topicService.getTopicsByCourseName(courseName);
     }
 
