@@ -1,6 +1,7 @@
 package br.com.alura.forum.service;
 
 import br.com.alura.forum.model.dto.*;
+import br.com.alura.forum.model.entities.Answer;
 import br.com.alura.forum.model.entities.Course;
 import br.com.alura.forum.model.entities.Topic;
 import br.com.alura.forum.repository.CourseRepository;
@@ -66,17 +67,7 @@ public class TopicService {
     public DetailsTopicDTO getTopicById(Long id) {
         Topic topic = findTopicById(id);
 
-        List<AnswerDTO> answerDTOS = new ArrayList<>();
-
-        topic.getAnswers().forEach((answer) -> {
-            AnswerDTO answerDTO = AnswerDTO.builder()
-                    .id(answer.getId())
-                    .dateCreation(answer.getDateCreation())
-                    .message(answer.getMessage())
-                    .userName(answer.getUser().getName())
-                    .build();
-            answerDTOS.add(answerDTO);
-        });
+        List<AnswerDTO> answerDTOS = buildAnswers(topic.getAnswers());
 
         return DetailsTopicDTO.builder()
                 .id(topic.getId())
@@ -87,6 +78,21 @@ public class TopicService {
                 .status(topic.getStatus())
                 .userName(topic.getUser().getName())
                 .build();
+    }
+
+    private List<AnswerDTO> buildAnswers(List<Answer> answers) {
+        List<AnswerDTO> answerDTOS = new ArrayList<>();
+
+        answers.forEach((answer) -> {
+            AnswerDTO answerDTO = AnswerDTO.builder()
+                    .id(answer.getId())
+                    .dateCreation(answer.getDateCreation())
+                    .message(answer.getMessage())
+                    .userName(answer.getUser().getName())
+                    .build();
+            answerDTOS.add(answerDTO);
+        });
+        return answerDTOS;
     }
 
     private Topic findTopicById(Long id) {
