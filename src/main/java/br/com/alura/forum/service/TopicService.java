@@ -7,6 +7,10 @@ import br.com.alura.forum.model.entities.Topic;
 import br.com.alura.forum.repository.CourseRepository;
 import br.com.alura.forum.repository.TopicRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -16,6 +20,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
+
 @RequiredArgsConstructor
 public class TopicService {
 
@@ -31,20 +36,18 @@ public class TopicService {
                 .collect(Collectors.toList());
     }
 
-    public List<TopicDTO> getTopicsByCourseName(String courseName) {
-        List<Topic> topics = courseNameIsNullOrEmpty(courseName);
+    public Page<TopicDTO> getTopicsByCourseName(String courseName,  Pageable pageable) {
+        Page<Topic> topics = courseNameIsNullOrEmpty(courseName, pageable);
 
-        return topics.stream()
-                .map(TopicDTO::new)
-                .collect(Collectors.toList());
+        return topics.map(TopicDTO::new);
     }
 
-    private List<Topic> courseNameIsNullOrEmpty(String courseName) {
-        List<Topic> topics;
+    private Page<Topic> courseNameIsNullOrEmpty(String courseName, Pageable pageable) {
+        Page<Topic> topics;
         if(courseName == null || courseName.trim().isEmpty()) {
-            topics = topicRepository.findAll();
+            topics = topicRepository.findAll(pageable);
         } else{
-            topics = topicRepository.findByCourseName(courseName);
+            topics = topicRepository.findByCourseName(courseName, pageable);
         }
         return topics;
     }

@@ -6,6 +6,11 @@ import br.com.alura.forum.model.dto.TopicDTO;
 import br.com.alura.forum.model.dto.TopicForm;
 import br.com.alura.forum.service.TopicService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -27,8 +32,9 @@ public class TopicsController {
     }
 
     @GetMapping("/getTopicsByCourseName")
-    public List<TopicDTO> getTopicsByCourseName(@RequestParam String courseName) {
-        return topicService.getTopicsByCourseName(courseName);
+    public Page<TopicDTO> getTopicsByCourseName(@RequestParam(required = false) String courseName
+            , @PageableDefault(sort = "id", direction = Sort.Direction.DESC, page = 0, size = 10) Pageable pageable) {
+        return topicService.getTopicsByCourseName(courseName, pageable);
     }
 
     @PostMapping
