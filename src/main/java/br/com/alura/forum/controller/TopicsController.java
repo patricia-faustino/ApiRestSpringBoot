@@ -6,6 +6,8 @@ import br.com.alura.forum.model.dto.TopicDTO;
 import br.com.alura.forum.model.dto.TopicForm;
 import br.com.alura.forum.service.TopicService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -32,12 +34,14 @@ public class TopicsController {
     }
 
     @GetMapping("/getTopicsByCourseName")
+    @Cacheable(value = "topicList")
     public Page<TopicDTO> getTopicsByCourseName(@RequestParam(required = false) String courseName
             , @PageableDefault(sort = "id", direction = Sort.Direction.DESC, page = 0, size = 10) Pageable pageable) {
         return topicService.getTopicsByCourseName(courseName, pageable);
     }
 
     @PostMapping
+    @CacheEvict(value = "topicList", allEntries = true)
     public ResponseEntity<TopicDTO> post(@RequestBody @Validated TopicForm topicForm, UriComponentsBuilder uriComponentsBuilder) {
         TopicDTO topicDTO = topicService.saveTopic(topicForm);
         URI uri = uriComponentsBuilder.path("/topics/{id}").buildAndExpand(topicDTO.getId()).toUri();
@@ -50,12 +54,14 @@ public class TopicsController {
     }
 
     @PutMapping("/{id}")
+    @CacheEvict(value = "topicList", allEntries = true)
     public ResponseEntity<TopicDTO> put(@PathVariable Long id, @RequestBody @Validated PutTopicForm topicForm) {
         TopicDTO topicDTO = topicService.putTopic(id, topicForm);
         return ResponseEntity.ok(topicDTO);
     }
 
     @DeleteMapping("/{id}")
+    @CacheEvict(value = "topicList", allEntries = true)
     public ResponseEntity<?> remove(@PathVariable Long id) {
         topicService.remove(id);
         return ResponseEntity.ok().build();
